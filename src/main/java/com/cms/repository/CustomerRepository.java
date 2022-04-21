@@ -3,10 +3,7 @@ package com.cms.repository;
 import com.cms.model.Customer;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 @Transactional
 public class CustomerRepository implements ICustomerRepository{
@@ -45,5 +42,14 @@ public class CustomerRepository implements ICustomerRepository{
         if (customer != null){
             em.remove(customer);
         }
+    }
+
+    @Override
+    public boolean insertWithStoredProcedure(Customer customer) {
+        String sql = "call Insert_Customer(:firstName, :lastName)";
+        Query query = em.createNativeQuery(sql);
+        query.setParameter("firstName",customer.getFirstName());
+        query.setParameter("lastName",customer.getLastName());
+        return query.executeUpdate() == 0;
     }
 }

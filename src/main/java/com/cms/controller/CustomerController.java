@@ -25,7 +25,8 @@ public class CustomerController {
     }
     @PostMapping("/create-customer")
     public ModelAndView saveCustomer(@ModelAttribute("customer")Customer customer){
-        customerService.save(customer);
+//        customerService.save(customer);\
+        customerService.insertWithStoredProcedure(customer);
         ModelAndView modelAndView = new ModelAndView("/customer/create");
         modelAndView.addObject("customer",new Customer());
         modelAndView.addObject("message","New customer created successfully");
@@ -58,7 +59,7 @@ public class CustomerController {
         return modelAndView;
     }
     @GetMapping("delete-customer/{id}")
-    public ModelAndView showdeleteForm(@PathVariable Long id){
+    public ModelAndView showDeleteForm(@PathVariable Long id){
         Customer customer = customerService.findById(id);
         if (customer != null){
             ModelAndView modelAndView = new ModelAndView("/customer/delete");
